@@ -1,9 +1,9 @@
 # TrovaScuole
 
-[![GitHub issues](https://img.shields.io/github/issues/SPARTAmarco/TrovaScuole.svg)](https://github.com/SPARTAmarco/TrovaScuole/issues)
-[![GitHub forks](https://img.shields.io/github/forks/SPARTAmarco/TrovaScuole.svg)](https://github.com/SPARTAmarco/TrovaScuole/network)
-[![GitHub stars](https://img.shields.io/github/stars/SPARTAmarco/TrovaScuole.svg)](https://github.com/SPARTAmarco/TrovaScuole/stargazers)
-[![GitHub license](https://img.shields.io/github/license/SPARTAmarco/TrovaScuole.svg)](https://github.com/SPARTAmarco/TrovaScuole/blob/main/LICENSE)
+[![GitHub issues](https://img.shields.io/github/issues/SPARTAmarco/PROGETTO-SCUOLE.svg)](https://github.com/SPARTAmarco/TrovaScuole/issues)
+[![GitHub forks](https://img.shields.io/github/forks/SPARTAmarco/PROGETTO-SCUOLE.svg)](https://github.com/SPARTAmarco/TrovaScuole/network)
+[![GitHub stars](https://img.shields.io/github/stars/SPARTAmarco/PROGETTO-SCUOLE.svg)](https://github.com/SPARTAmarco/TrovaScuole/stargazers)
+[![GitHub license](https://img.shields.io/github/license/SPARTAmarco/PROGETTO-SCUOLE.svg)](https://github.com/SPARTAmarco/TrovaScuole/blob/main/LICENSE)
 
 ## Descrizione
 
