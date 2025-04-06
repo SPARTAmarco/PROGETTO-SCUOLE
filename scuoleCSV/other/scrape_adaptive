@@ -1,0 +1,90 @@
+import requests
+from bs4 import BeautifulSoup
+import spacy
+import re
+import pandas as pd
+
+def get_visible_text(url):
+    """Scarica la pagina e restituisce il testo visibile, eliminando script e stili."""
+    response = requests.get(url)
+    response.raise_for_status()
+    soup = BeautifulSoup(response.text, 'html.parser')
+    
+    # Rimuovi tag indesiderati
+    for tag in soup(["script", "style"]):
+        tag.decompose()
+    
+    # Estrai il testo visibile; usa uno spazio come separatore
+    text = soup.get_text(separator=' ')
+    return text
+
+def extract_addresses(doc):
+    """Estrae frasi che probabilmente contengono indirizzi, basandosi su parole chiave."""
+    addresses = []
+    # Definisce una regex che cerca parole chiave per indirizzi
+    address_pattern = re.compile(r'\b(indirizzo|via|viale|piazza|p\.?zza|corso)\b', re.IGNORECASE)
+    
+    for sent in doc.sents:
+        sent_text = sent.text.strip()
+        if address_pattern.search(sent_text):
+            addresses.append(sent_text)
+    return addresses
+
+def extract_schedules(doc):
+    """Estrae frasi che probabilmente contengono orari, cercando 'orario' o pattern tempo."""
+    schedules = []
+    # Pattern per orari, ad es. 08:00, 14:30
+    time_pattern = re.compile(r'\b\d{1,2}:\d{2}\b')
+    
+    for sent in doc.sents:
+        sent_text = sent.text.strip()
+        if re.search(r'\b(orario|orari)\b', sent_text, re.IGNORECASE) or time_pattern.search(sent_text):
+            schedules.append(sent_text)
+    return schedules
+
+def main():
+    # Inserisci l'URL del sito (ad es. quello della scuola)
+    url = input("Inserisci l'URL del sito: ").strip()
+    print("Scaricando contenuto da:", url)
+    
+    try:
+        text = get_visible_text(url)
+    except Exception as e:
+        print("Errore durante il download della pagina:", e)
+        return
+
+    # Carica il modello spaCy per l'italiano
+    try:
+        nlp = spacy.load("it_core_news_sm")
+    except Exception as e:
+        print("Errore nel caricare il modello spaCy. Esegui:\npython -m spacy download it_core_news_sm")
+        return
+
+    doc = nlp(text)
+    
+    # Estrai indirizzi e orari
+    addresses = extract_addresses(doc)
+    schedules = extract_schedules(doc)
+    
+    # Stampa i risultati per controllo
+    print("\nIndirizzi trovati:")
+    for addr in addresses:
+        print("-", addr)
+    print("\nOrari trovati:")
+    for sched in schedules:
+        print("-", sched)
+    
+    # Salva i dati in un CSV; crea righe con tipo (Indirizzo/Orario) e contenuto
+    data = []
+    for addr in addresses:
+        data.append({"Tipo": "Indirizzo", "Informazione": addr})
+    for sched in schedules:
+        data.append({"Tipo": "Orario", "Informazione": sched})
+        
+    df = pd.DataFrame(data)
+    csv_filename = "output_info.csv"
+    df.to_csv(csv_filename, index=False, encoding="utf-8")
+    print(f"\nDati salvati nel file {csv_filename}")
+
+if __name__ == "__main__":
+    main()
